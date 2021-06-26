@@ -26,6 +26,10 @@ class User extends Model {
     });
     return this;
   }
+    //metodo para verificar se as senhas correspondem na auteticação(SessionController).
+    checkPassword(password){
+      return bcrypt.compare(password, this.password_hash);
+    }
 
 }
 
