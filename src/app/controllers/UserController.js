@@ -1,9 +1,22 @@
 import User from '../models/User';
+import * as Yup from 'yup';
 
 class UserController {
 
-
+  //create
   async store(req,res){
+    //validações com yup
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().email().required(),
+      password: Yup.string().required().min(6),
+
+    });
+
+    if(!(await schema.isValid(req.body))){
+      return res.status(400).json({error: 'Falha na validação dos campos.'});
+    }
+
     const userEmail = await User.findOne({where: {email: req.body.email}});
 
     if(userEmail){
@@ -17,11 +30,30 @@ class UserController {
       email
     });
   }
+  //listar todos falta fazer ainda.
   async index(req,res){
     const users = await User.findAll();
     return res.json({users})
   }
+  //update
   async update(req,res){
+    //validação de campos.
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+      .min(6)
+      .when('oldPassword', (oldPassword, field)=>
+        oldPassword ? field.required() : field
+      ),
+      //caso o usuario va mudar a senha vai ser necessário esse campo de
+      //confirmação da senha.
+      confirmPassword: Yup.string().when('password',(password, field)=>
+        password ? field.required().oneOf([Yup.ref('password')]) : field
+      ),
+    });
+
     
     const {email, oldPassword} = req.body;
 

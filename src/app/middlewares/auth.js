@@ -2,7 +2,9 @@ import jwt from 'jsonwebtoken';
 import authSecret from '../../config/authSecret';
 import { promisify } from 'util';
 
-
+//esse aquivo é tipo o guardião de rotas do angular.
+//antes de ir para alguma rota tem que passar por ele, caso precise de 
+//autenticação.
 export default async (req,res, next)=>{
   const authHeader = req.headers.authorization;
  
