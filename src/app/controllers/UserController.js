@@ -30,10 +30,12 @@ class UserController {
       email
     });
   }
-  //listar todos falta fazer ainda.
+  //listar todos.
   async index(req,res){
-    const users = await User.findAll();
-    return res.json({users})
+    const users = await User.findAll({
+      attributes:['id','name','email']
+    });
+    return res.json(users);
   }
   //update
   async update(req,res){
@@ -81,7 +83,24 @@ class UserController {
       email,
     });
   }
-  delete(){}
+  async delete(req,res){
+    const {id} = await User.findOne({where:{id: req.params.id}});
+    if(id != undefined){
+      if(!isNaN(id)){
+        User.destroy({
+          where:{
+            id:id
+          }
+        }).then(()=>{
+          res.json({message: 'Excluido com sucesso!'})
+        });
+      }else{
+        res.status(400).json({error: 'Esse id não é um número.'});
+      }
+    }else{
+      res.status(400).json({error: 'Id undefined'});
+    }
+  }
 
 
 }

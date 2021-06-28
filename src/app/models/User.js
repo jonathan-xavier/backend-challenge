@@ -26,10 +26,16 @@ class User extends Model {
     });
     return this;
   }
+
+  //fazer a ligação com os summoners
+  static associate(models){
+    this.hasMany(models.Summoner);
+  }
+
     //metodo para verificar se as senhas correspondem na auteticação(SessionController).
     checkPassword(password){
       return bcrypt.compare(password, this.password_hash);
-    }
+  }
 
 }
 
