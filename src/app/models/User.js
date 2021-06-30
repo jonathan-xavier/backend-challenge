@@ -28,6 +28,8 @@ class User extends Model {
   }
 
   //fazer a ligação com os summoners
+  //um usuário está associado a muitos summoner
+  //e um summoner está associado a apenas um usuário.
   static associate(models){
     this.hasMany(models.Summoner);
   }
